@@ -32,7 +32,13 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
+}
+
+body {
+  /*main body of code*/
+  font-family: 'Times New Roman', Times, serif;
 }
