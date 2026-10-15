@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 
 function App() {
+  const [error, setError] = useState("");
   const [catFact, setCatFact] = useState("");
   const fetchCatFact = () => {
     Axios.get("https://catfact.ninja/fact").then((res) => {
@@ -12,12 +13,22 @@ function App() {
     });
   }
 
-  const [name, setName] = useState("");
-  const [predictedAge, setPredictedAge] = useState(0);
-  const fetchData = () => {
-    Axios.get(`https://api.agify.io/?name=${name}`).then((res) => {
-      setPredictedAge(res.data.age);
-    });
+  const [pokemon, setPokemon] = useState("");
+  const [pokemonInfo, setPokemonInfo] = useState("");
+
+
+  const fetchPokemon = () => {
+    setError("");
+    setPokemonInfo(null);
+    Axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
+      .then((res) => {
+        setPokemonInfo(res.data.id);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        setError("Pokemon not found or API request failed");
+        console.log(err);
+      });
   };
 
   // Generate once when DOM loads
@@ -54,13 +65,16 @@ function App() {
       <button onClick={fetchCatFact}>Generate Cat Fact</button>
       <p>{catFact}</p>
       <input
-        placeholder="Type Name Here"
+        placeholder="Type Word Here"
         onChange={(event) => {
-          setName(event.target.value);
+          setPokemon(event.target.value);
         }}
       />
-      <button onClick={fetchData}>Predict Age</button>
-      <h1>Predicted Age: {predictedAge}</h1>
+      <button onClick={fetchPokemon}>Pokemon Search</button>
+      <p>
+        {error ? "Pokemon not found"
+          : `${pokemon} pokedex number: ${pokemonInfo}`}
+      </p>
     </div>
   );
 }
